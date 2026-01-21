@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -12,6 +13,7 @@ public class Grid2D : MonoBehaviour
     Vector2 localOffset;
     public Vector2 ScrollWheel;
     Vector3 currentMousePos = Vector3.zero;
+    Vector3 originOffset = Vector2.zero;
 
     int index = 0;
 
@@ -80,7 +82,7 @@ public class Grid2D : MonoBehaviour
         isStillDrawingGrid = true;
         index = 0;
         Color DrawColor = Color.red;
-
+        willDrawOrigin = true;
         while (isStillDrawingGrid)
         {
 
@@ -129,7 +131,9 @@ public class Grid2D : MonoBehaviour
     /// </summary>
     public void DrawOrigin()
     {
+        originOffset = origin * originSize;
 
+        DrawLine(new Vector2 (originOffset.x, origin.y), new Vector3(originOffset.y, origin.x) ,Color.blue);
     }
 
     /// <summary>
