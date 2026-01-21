@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
 
 public class Grid2D : MonoBehaviour
 {
@@ -14,10 +14,13 @@ public class Grid2D : MonoBehaviour
     Vector3 currentMousePos = Vector3.zero;
 
     int index = 0;
-    
-    float gridSize = 10f;
+
+    public float gridSize = 10f;
     float minGridSize = 2f;
     public float originSize = .6f;
+    public float AxisOffset = 0f;
+
+
 
     int divisionCount = 5;
     int minDivisionCount = 2;
@@ -27,25 +30,25 @@ public class Grid2D : MonoBehaviour
     public Color divisionColor = Color.yellow;
 
     public bool isDrawingOrigin = false;
+    public bool willDrawOrigin = false;
     public bool isDrawingAxis = true;
     public bool isDrawingDivisions = true;
-    public bool isStillDrawing = true;
+    public bool isStillDrawingGrid = true;
 
-    class rectangle
-    {
-        
-    }
+
 
     private void Start()
     {
         screenSize = new Vector3(Screen.width, Screen.height);
         origin = new Vector3(Screen.width / 2, Screen.height / 2);
+        isStillDrawingGrid = true;
     }
 
     void Update()
     {
-        GetInput(); 
-        DrawGrid(); 
+        GetInput();
+        DrawGrid();
+        
     }
 
     /// <summary>
@@ -61,7 +64,7 @@ public class Grid2D : MonoBehaviour
             //gets scroll wheel value and adjust gridsize appropriatly
             ScrollWheel = mouse.scroll.ReadValue();
 
-            if(ScrollWheel.y < 0) { gridSize--; }
+            if (ScrollWheel.y < 0) { gridSize--; }
             if (ScrollWheel.y > 0) { gridSize++; }
 
             //gets mouse left click
@@ -74,39 +77,51 @@ public class Grid2D : MonoBehaviour
     /// </summary>
     void DrawGrid()
     {
-        Color peterLine = Color.red; 
-        while (isStillDrawing == true)
+        isStillDrawingGrid = true;
+        index = 0;
+        Color DrawColor = Color.red;
+
+        while (isStillDrawingGrid)
         {
-            localOffset.x = index * gridSize;
-            localOffset.y = index * gridSize;
-            peterLine = lineColor;
-            if((index == 0 ) && (isDrawingAxis == true))
+
+            localOffset = new Vector3(gridSize, gridSize) * index;
+
+            DrawColor = lineColor;
+
+            if ((index == 0) && (isDrawingAxis == true))
             {
-                peterLine = axisColor;
-                
+                DrawColor = axisColor;
+                willDrawOrigin = true;
             }
 
-            if(((index%divisionCount) == 0 ) && (isDrawingDivisions == true))
+            if ((isDrawingDivisions) && (index % divisionCount) == 0)
             {
-                peterLine = divisionColor;
+                DrawColor = divisionColor;
+                willDrawOrigin = false;
             }
 
-            DrawLine(new Line(new Vector2(origin.x + localOffset.x, screenSize.y), new Vector2(origin.x + localOffset.x, 0), peterLine));
-            DrawLine(new Line(new Vector2(0, origin.y + localOffset.x), new Vector2(screenSize.x, origin.y + localOffset.x), peterLine));
+            DrawGridLines(localOffset, DrawColor);
+            DrawGridLines(-localOffset, DrawColor);
 
-            DrawLine(new Line(new Vector2(origin.x - localOffset.x, screenSize.y), new Vector2(origin.x - localOffset.x, 0), peterLine));
-            DrawLine(new Line(new Vector2(0, origin.y - localOffset.x), new Vector2(screenSize.x, origin.y - localOffset.x), peterLine));
-
-
-
+            if (isDrawingOrigin == true && willDrawOrigin == true)
+            {
+                DrawOrigin();
+            }
 
             index++;
-            if(index == 15)
+            if (index == screenSize.x || index == screenSize.y)
             {
-                isStillDrawing = false;
+                isStillDrawingGrid = false;
+                
             }
         }
+ 
+    }
 
+    public void DrawGridLines(Vector3 point, Color DrawColor)
+    {
+        DrawLine(new Vector2(origin.x + point.x, screenSize.y), new Vector2(origin.x + point.x, 0), DrawColor);
+        DrawLine(new Vector2(0, origin.y + point.x), new Vector2(screenSize.x, origin.y + point.x), DrawColor);
     }
 
     /// <summary>
@@ -114,7 +129,7 @@ public class Grid2D : MonoBehaviour
     /// </summary>
     public void DrawOrigin()
     {
-        
+
     }
 
     /// <summary>
