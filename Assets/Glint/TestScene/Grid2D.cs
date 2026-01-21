@@ -13,7 +13,7 @@ public class Grid2D : MonoBehaviour
     Vector2 localOffset;
     public Vector2 ScrollWheel;
     Vector3 currentMousePos = Vector3.zero;
-    Vector3 originOffset = Vector2.zero;
+    public Vector3 originOffset = Vector2.zero;
 
     int index = 0;
 
@@ -102,13 +102,14 @@ public class Grid2D : MonoBehaviour
                 willDrawOrigin = false;
             }
 
-            DrawGridLines(localOffset, DrawColor);
-            DrawGridLines(-localOffset, DrawColor);
 
             if (isDrawingOrigin == true && willDrawOrigin == true)
             {
                 DrawOrigin();
             }
+
+            DrawGridLines(localOffset, DrawColor);
+            DrawGridLines(-localOffset, DrawColor);
 
             index++;
             if (index == screenSize.x || index == screenSize.y)
