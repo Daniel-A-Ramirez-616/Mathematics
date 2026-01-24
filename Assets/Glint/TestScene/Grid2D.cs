@@ -15,7 +15,7 @@ public class Grid2D : MonoBehaviour
     Vector3 currentMousePos = Vector3.zero;
     public Vector3 originOffset = Vector2.zero;
 
-    int index = 0;
+    public int index = 0;
 
     public float gridSize = 10f;
     float minGridSize = 2f;
@@ -31,7 +31,7 @@ public class Grid2D : MonoBehaviour
     public Color lineColor = Color.gray;
     public Color divisionColor = Color.yellow;
 
-    public bool isDrawingOrigin = false;
+    public bool isDrawingOrigin = true;
     public bool willDrawOrigin = false;
     public bool isDrawingAxis = true;
     public bool isDrawingDivisions = true;
@@ -83,20 +83,23 @@ public class Grid2D : MonoBehaviour
         index = 0;
         Color DrawColor = Color.red;
         willDrawOrigin = true;
+        isDrawingOrigin = true;
+
         while (isStillDrawingGrid)
         {
 
             localOffset = new Vector3(gridSize, gridSize) * index;
-
+            AxisOffset = gridSize * originSize;
+            willDrawOrigin = false;
             DrawColor = lineColor;
 
-            if ((index == 0) && (isDrawingAxis == true))
+            if (index == 0 && isDrawingAxis == true)
             {
                 DrawColor = axisColor;
                 willDrawOrigin = true;
             }
 
-            if ((isDrawingDivisions) && (index % divisionCount) == 0)
+            if ((isDrawingDivisions) && (index % divisionCount) == 0 && index != 0)
             {
                 DrawColor = divisionColor;
                 willDrawOrigin = false;
@@ -132,9 +135,12 @@ public class Grid2D : MonoBehaviour
     /// </summary>
     public void DrawOrigin()
     {
-        originOffset = origin * originSize;
 
-        DrawLine(new Vector2 (originOffset.x, origin.y), new Vector3(originOffset.y, origin.x) ,Color.blue);
+        DrawLine(new Vector2 (origin.x - AxisOffset, origin.y), new Vector3(origin.x, origin.y + AxisOffset), Color.blue);
+        DrawLine(new Vector2(origin.x, origin.y + AxisOffset), new Vector3(origin.x + AxisOffset, origin.y), Color.blue);
+        DrawLine(new Vector2(origin.x + AxisOffset, origin.y), new Vector3(origin.x, origin.y - AxisOffset), Color.blue);
+        DrawLine(new Vector2(origin.x, origin.y - AxisOffset), new Vector3(origin.x - AxisOffset, origin.y), Color.blue);
+        Debug.Log("this func was called");
     }
 
     /// <summary>
