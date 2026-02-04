@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class Grid2D : MonoBehaviour
 {
@@ -59,6 +60,8 @@ public class Grid2D : MonoBehaviour
     void GetInput()
     {
         Mouse mouse = Mouse.current;
+        Keyboard kb = Keyboard.current;
+
         if (mouse != null)
         {
             //gets mouse position 
@@ -70,8 +73,61 @@ public class Grid2D : MonoBehaviour
             if (ScrollWheel.y > 0) { gridSize++; }
 
             //gets mouse left click
-            if (mouse.leftButton.wasPressedThisFrame) { origin.x = currentMousePos.x; origin.y = currentMousePos.y; }
+            if (mouse.middleButton.wasPressedThisFrame)
+            {
+                origin.x = currentMousePos.x; 
+                origin.y = currentMousePos.y; 
+            
+            }
         }
+
+        if (kb.ctrlKey.isPressed && ScrollWheel.y > 0)
+        {
+            divisionCount++;
+        }
+        if(kb.ctrlKey.isPressed && ScrollWheel.y < 0)
+        {
+            divisionCount--;
+        }
+
+        if(kb.digit1Key.wasPressedThisFrame)
+        {
+            Debug.Log("key pressed");
+            if(willDrawOrigin == true)
+            {
+                willDrawOrigin = false;
+            }
+            else
+            {
+                willDrawOrigin = true;
+            }
+
+        }
+        if (kb.digit2Key.wasPressedThisFrame)
+        {
+            Debug.Log("key pressed");
+            if (isDrawingAxis == true)
+            {
+                isDrawingAxis = false;
+            }
+            else
+            {
+                isDrawingAxis = true;
+            }
+        }
+        if (kb.digit3Key.wasPressedThisFrame)
+        {
+            Debug.Log("key pressed");
+            if (isDrawingDivisions == true)
+            {
+                isDrawingDivisions = false;
+            }
+            else
+            {
+                isDrawingDivisions = true;
+            }
+        }
+
     }
 
     /// <summary>
@@ -82,7 +138,7 @@ public class Grid2D : MonoBehaviour
         isStillDrawingGrid = true;
         index = 0;
         Color DrawColor = Color.red;
-        willDrawOrigin = true;
+  
         isDrawingOrigin = true;
 
         while (isStillDrawingGrid)
@@ -90,21 +146,20 @@ public class Grid2D : MonoBehaviour
 
             localOffset = new Vector3(gridSize, gridSize) * index;
             AxisOffset = gridSize * originSize;
-            willDrawOrigin = false;
+ 
             DrawColor = lineColor;
-
-            if (index == 0 && isDrawingAxis == true)
-            {
-                DrawColor = axisColor;
-                willDrawOrigin = true;
-            }
 
             if ((isDrawingDivisions) && (index % divisionCount) == 0 && index != 0)
             {
                 DrawColor = divisionColor;
-                willDrawOrigin = false;
+  
             }
 
+            if (index == 0 && isDrawingAxis == true)
+            {
+                DrawColor = axisColor;
+
+            }
 
             if (isDrawingOrigin == true && willDrawOrigin == true)
             {
@@ -140,7 +195,7 @@ public class Grid2D : MonoBehaviour
         DrawLine(new Vector2(origin.x, origin.y + AxisOffset), new Vector3(origin.x + AxisOffset, origin.y), Color.blue);
         DrawLine(new Vector2(origin.x + AxisOffset, origin.y), new Vector3(origin.x, origin.y - AxisOffset), Color.blue);
         DrawLine(new Vector2(origin.x, origin.y - AxisOffset), new Vector3(origin.x - AxisOffset, origin.y), Color.blue);
-        Debug.Log("this func was called");
+      
     }
 
     /// <summary>
