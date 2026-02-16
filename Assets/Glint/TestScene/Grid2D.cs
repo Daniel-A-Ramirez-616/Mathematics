@@ -20,7 +20,6 @@ public class Grid2D : MonoBehaviour
 
     public List<DrawingObject> drawObjects;
 
-    Arrow arrow;
 
     public int index = 0;
 
@@ -255,12 +254,19 @@ public class Grid2D : MonoBehaviour
 
     public static float V3ToAngle(Vector3 startPoint, Vector3 endPoint)
     {
-
+        Mathf.Atan2(startPoint.x, endPoint.y);
+        
+        return 0f;
     }
 
     public static float LineToAngle(Line line)
     {
+        return 0f;
+    }
 
+    public static Vector3 RotatePoint(Vector3 Center, float angle, Vector3 pointIN)
+    {
+        return Vector3.zero;
     }
 
     //Draws the Object at origin Point 
