@@ -13,8 +13,14 @@ public class Grid2D : MonoBehaviour
     public Vector3 origin;
     Vector2 localOffset;
     public Vector2 ScrollWheel;
-    Vector3 currentMousePos = Vector3.zero;
+    public Vector3 currentMousePos = Vector3.zero;
+    public Vector3 cmpScreenSpace = Vector3.zero;
+    public Vector3 cmpGridSpace = Vector3.zero;
     public Vector3 originOffset = Vector2.zero;
+
+    public List<DrawingObject> drawObjects;
+
+    Arrow arrow;
 
     public int index = 0;
 
@@ -45,12 +51,14 @@ public class Grid2D : MonoBehaviour
         screenSize = new Vector3(Screen.width, Screen.height);
         origin = new Vector3(Screen.width / 2, Screen.height / 2);
         isStillDrawingGrid = true;
+        drawObjects.Add(arrow);
     }
 
     void Update()
     {
         GetInput();
         DrawGrid();
+        
         
     }
 
@@ -176,7 +184,12 @@ public class Grid2D : MonoBehaviour
                 
             }
         }
- 
+
+        
+        cmpGridSpace = ScreenToGrid(currentMousePos);
+        cmpScreenSpace = GridToScreen(cmpGridSpace); ;
+        
+
     }
 
     public void DrawGridLines(Vector3 point, Color DrawColor)
@@ -205,7 +218,8 @@ public class Grid2D : MonoBehaviour
     /// <returns>Vector3 translated to Screen Space</returns>
     public Vector3 GridToScreen(Vector3 gridSpace)
     {
-        return Vector3.zero;
+     return gridSpace * gridSize + origin;
+
     }
 
     /// <summary>
@@ -215,14 +229,15 @@ public class Grid2D : MonoBehaviour
     /// <returns>Vector3 translated to Grid Space</returns>
     public Vector3 ScreenToGrid(Vector3 screenSpace)
     {
-        return Vector3.zero;
+        return (screenSpace - origin) / gridSize;
+      
     }
 
     /// <summary>
     /// Draws the given line object. If you are creating new line object, use the overload that takes parameters instead. 
     /// </summary>
     /// <param name="line"></param>
-    public void DrawLine(Line line)
+    public void DrawLine(Line line, bool drawOnGrid = true)
     {
         Glint.AddCommand(line);
     }
@@ -233,11 +248,25 @@ public class Grid2D : MonoBehaviour
     /// <param name="start"></param>
     /// <param name="end"></param>
     /// <param name="color"></param>
-    public void DrawLine(Vector3 start, Vector3 end, Color color)
+    public void DrawLine(Vector3 start, Vector3 end, Color color, bool drawOnGrid = true)
     {
         Glint.AddCommand(new Line(start, end, color));
     }
 
-    //Draws the Origin Point (or Symbol)
+    public static float V3ToAngle(Vector3 startPoint, Vector3 endPoint)
+    {
+
+    }
+
+    public static float LineToAngle(Line line)
+    {
+
+    }
+
+    //Draws the Object at origin Point 
+    public void DrawObject(DrawingObject lineObj, bool DrawOnGrid = true)
+    {
+        
+    }
 
 }
