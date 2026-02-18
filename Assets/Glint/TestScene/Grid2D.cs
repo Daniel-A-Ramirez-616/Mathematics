@@ -1,25 +1,23 @@
-using JetBrains.Annotations;
-using System.Collections;
+using System; 
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
+
 
 public class Grid2D : MonoBehaviour
 {
 
     public Vector3 screenSize;
     public Vector3 origin;
-    Vector2 localOffset;
     public Vector2 ScrollWheel;
     public Vector3 currentMousePos = Vector3.zero;
     public Vector3 cmpScreenSpace = Vector3.zero;
     public Vector3 cmpGridSpace = Vector3.zero;
-    public Vector3 originOffset = Vector2.zero;
+    Vector2 localOffset;
+    Vector3 originOffset = Vector2.zero;
 
-    public List<DrawingObject> drawObjects;
-
+    public List<DrawingObject> drawingObjects;
+    DrawingObject drawObj;
 
     public int index = 0;
 
@@ -42,6 +40,8 @@ public class Grid2D : MonoBehaviour
     public bool isDrawingAxis = true;
     public bool isDrawingDivisions = true;
     public bool isStillDrawingGrid = true;
+    public bool IsDrawingGrid = true;
+    public bool isDrawingObjects = true; 
 
 
 
@@ -50,15 +50,22 @@ public class Grid2D : MonoBehaviour
         screenSize = new Vector3(Screen.width, Screen.height);
         origin = new Vector3(Screen.width / 2, Screen.height / 2);
         isStillDrawingGrid = true;
-        drawObjects.Add(arrow);
+       
+        
+        drawingObjects = new List<DrawingObject>();
+        drawingObjects.Add(new Arrow());
+
+        
     }
 
     void Update()
     {
         GetInput();
         DrawGrid();
-        
-        
+
+        DrawObjects(); 
+
+
     }
 
     /// <summary>
@@ -69,47 +76,60 @@ public class Grid2D : MonoBehaviour
         Mouse mouse = Mouse.current;
         Keyboard kb = Keyboard.current;
 
-        if (mouse != null)
+        if ((mouse == null) || (kb == null))
         {
-            //gets mouse position 
-            currentMousePos = Mouse.current.position.ReadValue();
-            //gets scroll wheel value and adjust gridsize appropriatly
-            ScrollWheel = mouse.scroll.ReadValue();
+            Debug.LogWarning("Missing Keyboard or Mouse");
+            return;
+        }
 
-            if (ScrollWheel.y < 0) { gridSize--; }
-            if (ScrollWheel.y > 0) { gridSize++; }
 
-            //gets mouse left click
-            if (mouse.middleButton.wasPressedThisFrame)
+        //gets mouse position 
+        currentMousePos = Mouse.current.position.ReadValue();
+        //gets scroll wheel value and adjust gridsize appropriatly
+        ScrollWheel = mouse.scroll.ReadValue();
+        bool ControlIsPressed = kb.ctrlKey.isPressed; 
+
+     
+
+        //gets mouse left click
+        if (mouse.middleButton.wasPressedThisFrame)
+        {
+            origin = currentMousePos;
+        }
+
+        if (!ControlIsPressed && (ScrollWheel.y > 0))
+        {
+            gridSize++;
+        }
+        if (!ControlIsPressed && (ScrollWheel.y < 0))
+        {
+            gridSize--;
+            if (gridSize <= minGridSize)
             {
-                origin.x = currentMousePos.x; 
-                origin.y = currentMousePos.y; 
-            
+                gridSize = minGridSize;
             }
         }
 
-        if (kb.ctrlKey.isPressed && ScrollWheel.y > 0)
+
+        if (ControlIsPressed && (ScrollWheel.y > 0))
         {
             divisionCount++;
         }
-        if(kb.ctrlKey.isPressed && ScrollWheel.y < 0)
+        if (ControlIsPressed && (ScrollWheel.y < 0))
         {
             divisionCount--;
+            if (divisionCount <= minDivisionCount)
+            {
+                divisionCount = minDivisionCount;
+            }
         }
 
-        if(kb.digit1Key.wasPressedThisFrame)
+        if (kb.digit1Key.wasPressedThisFrame)
         {
             Debug.Log("key pressed");
-            if(willDrawOrigin == true)
-            {
-                willDrawOrigin = false;
-            }
-            else
-            {
-                willDrawOrigin = true;
-            }
-
+            willDrawOrigin = !willDrawOrigin; 
         }
+
         if (kb.digit2Key.wasPressedThisFrame)
         {
             Debug.Log("key pressed");
@@ -142,6 +162,9 @@ public class Grid2D : MonoBehaviour
     /// </summary>
     void DrawGrid()
     {
+        if (!IsDrawingGrid) {  return; }    
+
+
         isStillDrawingGrid = true;
         index = 0;
         Color DrawColor = Color.red;
@@ -193,8 +216,8 @@ public class Grid2D : MonoBehaviour
 
     public void DrawGridLines(Vector3 point, Color DrawColor)
     {
-        DrawLine(new Vector2(origin.x + point.x, screenSize.y), new Vector2(origin.x + point.x, 0), DrawColor);
-        DrawLine(new Vector2(0, origin.y + point.x), new Vector2(screenSize.x, origin.y + point.x), DrawColor);
+        DrawLine(new Vector2(origin.x + point.x, screenSize.y), new Vector2(origin.x + point.x, 0), DrawColor, false);
+        DrawLine(new Vector2(0, origin.y + point.x), new Vector2(screenSize.x, origin.y + point.x), DrawColor, false);
     }
 
     /// <summary>
@@ -203,10 +226,10 @@ public class Grid2D : MonoBehaviour
     public void DrawOrigin()
     {
 
-        DrawLine(new Vector2 (origin.x - AxisOffset, origin.y), new Vector3(origin.x, origin.y + AxisOffset), Color.blue);
-        DrawLine(new Vector2(origin.x, origin.y + AxisOffset), new Vector3(origin.x + AxisOffset, origin.y), Color.blue);
-        DrawLine(new Vector2(origin.x + AxisOffset, origin.y), new Vector3(origin.x, origin.y - AxisOffset), Color.blue);
-        DrawLine(new Vector2(origin.x, origin.y - AxisOffset), new Vector3(origin.x - AxisOffset, origin.y), Color.blue);
+        DrawLine(new Vector2 (origin.x - AxisOffset, origin.y), new Vector3(origin.x, origin.y + AxisOffset), Color.blue, false);
+        DrawLine(new Vector2(origin.x, origin.y + AxisOffset), new Vector3(origin.x + AxisOffset, origin.y), Color.blue, false);
+        DrawLine(new Vector2(origin.x + AxisOffset, origin.y), new Vector3(origin.x, origin.y - AxisOffset), Color.blue, false);
+        DrawLine(new Vector2(origin.x, origin.y - AxisOffset), new Vector3(origin.x - AxisOffset, origin.y), Color.blue, false);
       
     }
 
@@ -217,7 +240,7 @@ public class Grid2D : MonoBehaviour
     /// <returns>Vector3 translated to Screen Space</returns>
     public Vector3 GridToScreen(Vector3 gridSpace)
     {
-     return gridSpace * gridSize + origin;
+     return (gridSpace * gridSize) + origin;
 
     }
 
@@ -238,7 +261,14 @@ public class Grid2D : MonoBehaviour
     /// <param name="line"></param>
     public void DrawLine(Line line, bool drawOnGrid = true)
     {
-        Glint.AddCommand(line);
+        if (drawOnGrid)
+        {
+            DrawLine(line.start, line.end, line.color, drawOnGrid); 
+        }
+        else
+        {
+            Glint.AddCommand(line);
+        }
     }
 
     /// <summary>
@@ -249,29 +279,25 @@ public class Grid2D : MonoBehaviour
     /// <param name="color"></param>
     public void DrawLine(Vector3 start, Vector3 end, Color color, bool drawOnGrid = true)
     {
-        Glint.AddCommand(new Line(start, end, color));
+        if (drawOnGrid)
+        {
+            Glint.AddCommand(new Line(GridToScreen(start), GridToScreen(end), color));
+        }
+        else
+        {
+            Glint.AddCommand(new Line(start, end, color));
+        }
     }
 
-    public static float V3ToAngle(Vector3 startPoint, Vector3 endPoint)
+    public void DrawObjects()
     {
-        Mathf.Atan2(startPoint.x, endPoint.y);
-        
-        return 0f;
-    }
+        if (!isDrawingObjects) { return; }  
 
-    public static float LineToAngle(Line line)
-    {
-        return 0f;
-    }
+        foreach (DrawingObject obj in drawingObjects)
+        {
+            obj.Draw(this); 
+        }
 
-    public static Vector3 RotatePoint(Vector3 Center, float angle, Vector3 pointIN)
-    {
-        return Vector3.zero;
-    }
-
-    //Draws the Object at origin Point 
-    public void DrawObject(DrawingObject lineObj, bool DrawOnGrid = true)
-    {
         
     }
 

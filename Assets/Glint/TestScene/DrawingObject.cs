@@ -8,9 +8,11 @@ using System;
 public class DrawingObject
 {
     public bool PerformDraw = true;
+
+    public Vector3 Location = Vector3.zero; 
     public float Roation = 0;
     public Vector3 Scale = Vector3.zero;
-    public Vector3 Location = Vector3.zero;
+    
     public List<Line> Lines;
 
     public DrawingObject()

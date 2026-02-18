@@ -227,7 +227,16 @@ MonoBehaviour:
   screenSize: {x: 0, y: 0, z: 0}
   origin: {x: 0, y: 0, z: 0}
   ScrollWheel: {x: 0, y: 0}
+  currentMousePos: {x: 0, y: 0, z: 0}
+  cmpScreenSpace: {x: 0, y: 0, z: 0}
+  cmpGridSpace: {x: 0, y: 0, z: 0}
   originOffset: {x: 0, y: 0, z: 0}
+  drawObjects:
+  - PerformDraw: 0
+    Roation: 0
+    Scale: {x: 0, y: 0, z: 0}
+    Location: {x: 0, y: 0, z: 0}
+  index: 0
   gridSize: 100
   originSize: 0.6
   AxisOffset: 0
