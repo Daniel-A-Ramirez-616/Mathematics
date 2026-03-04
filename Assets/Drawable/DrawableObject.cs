@@ -79,4 +79,37 @@ public class DrawableObject
 
         return translatedLine;
     }
+
+    public virtual void Tick()
+    {
+
+    }
+
+    public float GetRotationinDegrees()
+    {
+        return 0;
+    }
+    public void SetRotationinDegrees(float degrees)
+    {
+
+    }
+
+    public static float V3ToAngle(Vector3 startPoint, Vector3 endPoint)
+    {
+        return 0;
+    }
+    public static float V3ToAngleinDegrees(Vector3 startPoint, Vector3 endPoint)
+    {
+        return 0;
+    }
+
+    public static float LineToAngle(Line line)
+    {
+        return 0;
+    }
+    public static Vector3 RotatePoint(Vector3 center, Vector3 pointIN, float angleInRadians)
+    {
+        return new Vector3(0, 0, 0);
+    }
+
 }

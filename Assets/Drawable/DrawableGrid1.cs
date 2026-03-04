@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 public class DrawableGrid : MonoBehaviour
 {
+    public static DrawableGrid Instance;
 
     public Vector3 screenSize;
     public Vector3 origin;
@@ -24,16 +25,35 @@ public class DrawableGrid : MonoBehaviour
     public bool isDrawingTheGrid = true; 
     public bool isDrawingOrigin = true;
     public bool isDrawingAxis = true;
+    public bool isDrawingAxisOnly = false; 
     public bool isDrawingDivisions = true;
+    public bool isTickAllScenes = false;
+    public bool isTickingScenes = true; 
+    public bool isTickingGrid = true;
+
+    public Vector3 MousePosition = Vector3.zero;
+
+
+    //public List<DrawableObject> lineObjects; 
+
 
     public int SceneIndex = 0; 
-    public List<List<DrawableObject>> SceneList;
+    public List< List<DrawableObject> > SceneList;
     public List<string> SceneListName;
+
+    private void Awake()
+    {
+        // Lazy Singleton
+        Instance = this;
+    }
 
     private void Start()
     {
         screenSize = new Vector3(Screen.width, Screen.height);
         origin = new Vector3(Screen.width / 2, Screen.height / 2);
+
+        //lineObjects = new List<DrawableObject>(); 
+
 
         SceneList = new List< List<DrawableObject> >();
         SceneListName = new List<string>();
@@ -47,11 +67,55 @@ public class DrawableGrid : MonoBehaviour
 
     void Update()
     {
-        GetInput(); 
+        GetInput();
+
+        TickGrid(); 
+        TickScenes(); 
+        
         DrawGrid();
 
         DrawScene(); 
+
     }
+
+    public void TickScenes()
+    {
+        if (!isTickingScenes) { return; }
+
+
+        if (isTickAllScenes)
+        {
+            foreach (List<DrawableObject> scene in SceneList)
+            {
+                TickThisScene(scene); 
+            }
+        }
+        else
+        {
+            TickThisScene(SceneList[SceneIndex]); 
+        }
+
+    }
+
+    public void TickThisScene(List<DrawableObject> scene)
+    {
+        foreach(DrawableObject obj in scene)
+        {
+            obj.Tick(); 
+        }
+    }
+
+    public void TickGrid()
+    {
+        if (!isTickingGrid) { return; } 
+        Tick(); 
+    }
+
+    public virtual void Tick()
+    {
+
+    }
+
 
     public void SelectNextScene()
     {
@@ -121,6 +185,24 @@ public class DrawableGrid : MonoBehaviour
         SceneList[sceneNumber].Add(drawingObject);
     }
 
+    /*public void DrawObjects()
+    {
+        if (!isDrawingObjects) { return; }
+
+        if (lineObjects.Count == 0)
+        {
+            Debug.LogWarning("No OBJECTS to Draw!");
+            return;
+        }
+
+        foreach (DrawableObject obj in lineObjects)
+        {
+            obj.Draw(this); 
+        }
+    }
+    */
+
+
     public void DrawScene()
     {
         if (!isDrawingObjects) { return; }
@@ -154,10 +236,12 @@ public class DrawableGrid : MonoBehaviour
             return;
         }
 
+
+        MousePosition = mouse.position.ReadValue(); 
         // Place the Origin 
         if (mouse.middleButton.isPressed)
         {
-            origin = mouse.position.ReadValue();
+            origin = MousePosition;
         }
 
         // Check Mouse Scroll Wheel and update Grid Size
@@ -269,6 +353,11 @@ public class DrawableGrid : MonoBehaviour
             pointIndex++;
 
             if ( IsOffScreen(negPoint) && IsOffScreen(posPoint))
+            {
+                StillDrawing = false;
+            }
+
+            if (isDrawingAxisOnly)
             {
                 StillDrawing = false;
             }
