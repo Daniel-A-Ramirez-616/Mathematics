@@ -5,54 +5,44 @@ public class Lab04Grid : DrawableGrid
     public override void SetupScenes()
     {
         int sceneIndex;
-        DrawableArrow newArrow;
-        DrawableObject newObject;
+        DrawableObject newGraph;
 
 
         AddScene("Empty Scene, Use Tab To Switch Scenes");
 
 
-        sceneIndex = AddScene("Arrow, As is");
-        newArrow = new DrawableArrow();
-        AddObjectToScene(sceneIndex, newArrow);
+        sceneIndex = AddScene("Diamond As is (it's really small) ");
+        newGraph = new DrawableDiamond();
+        AddObjectToScene(sceneIndex, newGraph);
 
 
-        sceneIndex = AddScene("Arrow, Moved Forward");
-        newArrow = new DrawableArrow();
-        newArrow.Position = new Vector2(30, 0);
-        AddObjectToScene(sceneIndex, newArrow);
+        sceneIndex = AddScene("Diamond at Scale of 20");
+        newGraph = new DrawableDiamond();
+        newGraph.Scale = (Vector3.one * 20f);
+        AddObjectToScene(sceneIndex, newGraph);
 
 
-        sceneIndex = AddScene("Arrow, 50% size");
-        newArrow = new DrawableArrow();
-        newArrow.Scale = (Vector3.one * .5f);
-        AddObjectToScene(sceneIndex, newArrow);
+        sceneIndex = AddScene("Diamond at Scale of 20,10");
+        newGraph = new DrawableDiamond();
+        newGraph.Scale = new Vector3(20, 10, 1);
+        AddObjectToScene(sceneIndex, newGraph);
 
 
-        sceneIndex = AddScene("Arrow, Moved Forward at 25% size");
-        newArrow = new DrawableArrow();
-        newArrow.Position = new Vector2(30, 0);
-        newArrow.Scale = (Vector3.one * .25f);
-        AddObjectToScene(sceneIndex, newArrow);
+        sceneIndex = AddScene("Diamond at Scale of 20,10, Rotation of 45 deg. ");
+        newGraph = new DrawableDiamond();
+        newGraph.Scale = new Vector3(20, 10, 1);
+        newGraph.Roation = (45 * Mathf.Deg2Rad);
+        AddObjectToScene(sceneIndex, newGraph);
 
+        sceneIndex = AddScene("Rotating Diamond  at Scale of 20,10");
+        newGraph = new RotatingDiamond();
+        newGraph.Scale = new Vector3(20, 10, 1);
+        AddObjectToScene(sceneIndex, newGraph);
 
-        sceneIndex = AddScene("Parabola1");
-        newObject = new DrawableParabola1();
-        AddObjectToScene(sceneIndex, newObject);
+        sceneIndex = AddScene("Facing Box, At Scale of 10,10");
+        newGraph = new FacingBox();
+        newGraph.Scale = new Vector3(10, 10, 1);
+        AddObjectToScene(sceneIndex, newGraph);
 
-
-        sceneIndex = AddScene("Parabola2");
-        newObject = new DrawableParabola2();
-        AddObjectToScene(sceneIndex, newObject);
-
-
-        sceneIndex = AddScene("Parabola3");
-        newObject = new DrawableParabola3();
-        AddObjectToScene(sceneIndex, newObject);
-
-
-        sceneIndex = AddScene("Parabola4");
-        newObject = new DrawableParabola4();
-        AddObjectToScene(sceneIndex, newObject);
     }
 }

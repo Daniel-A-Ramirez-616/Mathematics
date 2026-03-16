@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Drawing.Glint;
 using System;
-using UnityEngine.UIElements;
+
 
 [Serializable]
 public class DrawableObject
@@ -28,7 +27,6 @@ public class DrawableObject
     {
 
     }
-
     public void AddLineToObject(Line line)
     {
         LineList.Add(line);
@@ -68,10 +66,18 @@ public class DrawableObject
         Vector3 end = translatedLine.end;
 
         // Scale
-        translatedLine.start = new Vector3(start.x, start.y) * Scale.y;
-        translatedLine.end = new Vector3(end.x, end.y) * Scale.y;
+        translatedLine.start.x *= Scale.x;
+        translatedLine.start.y *= Scale.y;
+        translatedLine.start.z *= Scale.z;
+
+        translatedLine.end.x *= Scale.x;
+        translatedLine.end.y *= Scale.y;
+        translatedLine.end.z *= Scale.z;
 
         // Rotate
+        translatedLine.start = RotatePoint(Vector3.zero, translatedLine.start, Roation);
+        translatedLine.end = RotatePoint(Vector3.zero, translatedLine.end, Roation);
+
 
         // Position
         translatedLine.start += Position;
@@ -85,31 +91,45 @@ public class DrawableObject
 
     }
 
-    public float GetRotationinDegrees()
-    {
-        return 0;
-    }
-    public void SetRotationinDegrees(float degrees)
-    {
-
-    }
-
     public static float V3ToAngle(Vector3 startPoint, Vector3 endPoint)
     {
-        return 0;
+        Vector3 lineVector = endPoint - startPoint;
+        return Mathf.Atan2(lineVector.y, lineVector.x);
+     
     }
+
     public static float V3ToAngleinDegrees(Vector3 startPoint, Vector3 endPoint)
     {
-        return 0;
+        Vector3 lineVector = endPoint - startPoint;
+        float radians = Mathf.Atan2(lineVector.y, lineVector.x);
+        return (radians = Mathf.Rad2Deg);
     }
 
     public static float LineToAngle(Line line)
     {
-        return 0;
-    }
-    public static Vector3 RotatePoint(Vector3 center, Vector3 pointIN, float angleInRadians)
-    {
-        return new Vector3(0, 0, 0);
+        return V3ToAngle(line.start, line.end);
     }
 
+    public static Vector3 RotatePoint(Vector3 center, Vector3 pointIN, float angleInRadians)
+    {
+        // If not at 0,0,0 - Translate back to origin.  
+        Vector3 PointAtZero = pointIN - center;
+        Vector3 result = Vector3.zero;
+
+        result.x = PointAtZero.x * Mathf.Cos(angleInRadians) - PointAtZero.y * Mathf.Sin(angleInRadians);
+        result.y = PointAtZero.x * Mathf.Sin(angleInRadians) + PointAtZero.y * Mathf.Cos(angleInRadians);
+
+        // Translate back to Center Point
+        return (result + center);
+    }
+
+    public float GetRotationinDegrees()
+    {
+        return (Roation * Mathf.Rad2Deg);
+    }
+
+    public void SetRotationinDegrees(float degrees)
+    {
+        Roation = (degrees * Mathf.Deg2Rad);
+    }
 }
