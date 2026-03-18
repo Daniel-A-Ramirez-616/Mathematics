@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 using Rect = System.Drawing.Rectangle;
@@ -11,8 +12,26 @@ public class DrawingTools
     /// <param name="grid"> if grid = null, info in Rect is in screen coordinates, else info is in grid space</param>
     public static void DrawRectangle(Rect box, Color color, DrawableGrid grid = null)
     {
-       
-       
+        Line top = new Line(new Vector2(box.X, box.Y+box.Height), new Vector2((box.X + box.Width), box.Y+box.Height), color);
+        Line left = new Line(new Vector2(box.X, box.Y + box.Height), new Vector2(box.X, box.Y), color);
+        Line right = new Line(new Vector2((box.X + box.Width), (box.Y + box.Height)), new Vector2((box.X + box.Width), box.Y), color);
+        Line bottom = new Line(new Vector2(box.X, box.Y), new Vector2((box.X+box.Width), box.Y), color);
+
+       if (grid == null)
+        {
+            Glint.AddCommand(top);
+            Glint.AddCommand(left);
+            Glint.AddCommand(right);
+            Glint.AddCommand(bottom);
+
+        }
+        else
+        {
+            grid.DrawLine(top);
+            grid.DrawLine(left);
+            grid.DrawLine(right);
+            grid.DrawLine(bottom);
+        }
     }
 
     /// <summary>
@@ -24,8 +43,13 @@ public class DrawingTools
     /// <returns>point in Vector3</returns>
     public static Vector3 CircleRadiusPoint(Vector3 origin, float angle, float radius)
     {
-        // stub code, replace this
-        return Vector3.zero;
+        Vector3 result = Vector3.zero;
+        result.x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
+        result.y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
+
+        result += origin;
+
+        return result;
     }
 
     /// <summary>
@@ -37,8 +61,13 @@ public class DrawingTools
     /// <returns>point in Vector3</returns>
     public static Vector3 EllipseRadiusPoint(Vector3 origin, float angle, Vector3 axis)
     {
-        // stub code, replace this
-        return Vector3.zero;
+        Vector3 result = Vector3.zero;
+        result.x = Mathf.Cos(angle * Mathf.Deg2Rad) * axis.x;
+        result.y = Mathf.Sin(angle * Mathf.Deg2Rad) * axis.y;
+
+        result += origin;
+
+        return result;
     }
 
     /// <summary>
@@ -50,7 +79,17 @@ public class DrawingTools
     /// <param name="color">Color to draw, use Color.####</param>
     public static void DrawCircle(Vector3 position, float radius, int sides, Color color)
     {
+        int numberofSides = sides;
+        if(numberofSides < 3) { numberofSides = 12; }
 
+        float degreeStep = 360 / numberofSides;
+        Vector3 start = Vector3.zero;
+        Vector3 end = Vector3.zero;
+
+        for (int i = 0; i < numberofSides; i++)
+        {
+            start = CircleRadiusPoint(position, (degreeStep * i), radius);
+        }
     }
 
     /// <summary>
@@ -62,7 +101,8 @@ public class DrawingTools
     /// <param name="color">Color to draw, use Color.####</param>
     public static void DrawEllipse(Vector3 position, Vector2 axis, int sides, Color color)
     {
-
+        int numberofSides = sides;
+        if (numberofSides < 3) { numberofSides = 12; }
     }
 
     public static DrawableObject CreateCircleObject(Vector3 position, float radius, int sides, Color color)
