@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -129,6 +130,34 @@ public class DrawingTools
     }
 
     public static DrawableObject CreateCircleObject(Vector3 position, float radius, int sides, Color color)
+    {
+        DrawableObject newCircle = new DrawableObject();
+
+        int numberofSides = sides;
+        if (numberofSides < 3) { numberofSides = 12; }
+
+        float degreeStep = 360 / numberofSides;
+        Vector3 start = Vector3.zero;
+        Vector3 end = Vector3.zero;
+        Line newline;
+
+        for (int i = 0; i < numberofSides; i++)
+        {
+            start = CircleRadiusPoint(position, (degreeStep * i), radius);
+            end = CircleRadiusPoint(position, (degreeStep * (i + 1)), radius);
+            newline = new Line(start, end, color);
+
+            newCircle.AddLineToObject(newline);
+
+
+        }
+        
+        
+
+        return newCircle;
+    }
+
+    public static DrawableObject CreateCircleObjectonMouse(Vector3 position, float radius, int sides, Color color)
     {
         DrawableObject newCircle = new DrawableObject();
 
