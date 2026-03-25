@@ -51,7 +51,6 @@ public static class CollisionTools
         return false; 
     }
     public static bool IsPointInTriangle(Vector3 Point, TriangleData Triangle)
-
     {
         // stub code 
         return false;
