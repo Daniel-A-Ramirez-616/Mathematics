@@ -1,3 +1,4 @@
+using Palmmedia.ReportGenerator.Core;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -41,16 +42,16 @@ public static class CollisionTools
 
     public static bool IsPointInCircle(Vector3 Point, Vector3 Center, float Radius)
     {
-        // stub code 
-        return true; 
+        return (Point - Center).magnitude < Radius;
     }
 
-    public static bool IsPointInRectangle(Vector3 Point, Rect Rectangle)
+    public static bool IsPointInRectangle(Vector3 Point, Rect Box)
     {
         // stub code 
-        return false;
+        return false; 
     }
     public static bool IsPointInTriangle(Vector3 Point, TriangleData Triangle)
+
     {
         // stub code 
         return false;

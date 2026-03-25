@@ -41,10 +41,6 @@ public class Lab06Grid : DrawableGrid
     {
         pointObject.Position = ScreenToGrid(MousePosition);
 
-        DrawingTools.DrawRectangle(rectangleData, rectDrawColor, this);
- 
-        CollisionTools.DrawTriangle(triangleData, triDrawColor, this);
-
 
         if (CollisionTools.IsPointInCircle(pointObject.Position, circleObject.Position, circleRadius))
         {
@@ -78,6 +74,10 @@ public class Lab06Grid : DrawableGrid
             triDrawColor = Color.red;
             TriangleCollisionResult = "NO ";
         }
+
+        DrawingTools.DrawRectangle(rectangleData, rectDrawColor, this);
+
+        CollisionTools.DrawTriangle(triangleData, triDrawColor, this);
 
     }
 }
