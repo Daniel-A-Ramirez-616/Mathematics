@@ -68,4 +68,8 @@ public static class CollisionTools
 
         return (u >= 0) && (v >= 0) && (u + v < 1);
     }
+    public static bool IsPointInEllipse(Vector3 Point, Vector3 Center, Vector2 Axis)
+    {
+        return (Point - Center).magnitude < Axis;
+    }
 }
