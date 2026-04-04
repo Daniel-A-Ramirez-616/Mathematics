@@ -40,6 +40,7 @@ public class DrawableGrid : MonoBehaviour
     public int SceneIndex = 0; 
     public List< List<DrawableObject> > SceneList;
     public List<string> SceneListName;
+    public Dictionary <DrawableObject, int> RemoveList;
 
     private void Awake()
     {
@@ -54,7 +55,7 @@ public class DrawableGrid : MonoBehaviour
 
         //lineObjects = new List<DrawableObject>(); 
 
-
+        RemoveList = new Dictionary<DrawableObject, int>();
         SceneList = new List< List<DrawableObject> >();
         SceneListName = new List<string>();
         SetupScenes(); 
@@ -70,8 +71,10 @@ public class DrawableGrid : MonoBehaviour
         GetInput();
 
         TickGrid(); 
-        TickScenes(); 
-        
+        TickScenes();
+
+        CleanUpScenes();
+
         DrawGrid();
 
         DrawScene(); 
@@ -116,6 +119,19 @@ public class DrawableGrid : MonoBehaviour
 
     }
 
+    public virtual void CleanUpScenes()
+    {
+        if(RemoveList.Count == 0)
+        {
+            return;
+        }
+        foreach(var item in RemoveList)
+        {
+            SceneList[item.Value].Remove(item.Key);
+        }
+
+        RemoveList.Clear();
+    }
 
     public void SelectNextScene()
     {
@@ -238,6 +254,14 @@ public class DrawableGrid : MonoBehaviour
 
 
         MousePosition = mouse.position.ReadValue(); 
+        
+
+        ProcessInput(kb, mouse);
+    }
+
+
+    public virtual void ProcessInput(Keyboard kb, Mouse mouse)
+    {
         // Place the Origin 
         if (mouse.middleButton.isPressed)
         {
@@ -280,7 +304,7 @@ public class DrawableGrid : MonoBehaviour
 
         if (kb.digit1Key.wasPressedThisFrame)
         {
-            isDrawingDivisions = !isDrawingDivisions; 
+            isDrawingDivisions = !isDrawingDivisions;
         }
 
         if (kb.digit2Key.wasPressedThisFrame)
@@ -305,11 +329,10 @@ public class DrawableGrid : MonoBehaviour
 
         if (kb.tabKey.wasPressedThisFrame)
         {
-            SelectNextScene(); 
+            SelectNextScene();
         }
-
-
     }
+
 
     /// <summary>
     /// Draws the grid
@@ -472,4 +495,5 @@ public class DrawableGrid : MonoBehaviour
         Glint.AddCommand(new Line(GridToScreen(start), GridToScreen(end), color));
 
     }
+
 }

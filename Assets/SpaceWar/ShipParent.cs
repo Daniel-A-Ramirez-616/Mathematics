@@ -1,11 +1,13 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ShipParent : MovingObject
 {
     public DrawableObject ship;
     public DrawableObject thrust;
-    public float ShipMaxVelocity = 25;
+    public float ShipMaxVelocity = 25f;
+    public float ShipThrust = 10f;
 
     public void SetupA(DrawableGrid grid, int sceneIndex)
     {
@@ -50,7 +52,9 @@ public class ShipParent : MovingObject
 
     public void AddThrust()
     {
-        thrust.PerformDraw = true; 
+        thrust.PerformDraw = true;
+        Velocity += DrawingTools.CircleRadiusPoint(Vector3.zero, this.GetRotationinDegrees(), 1) * ShipThrust * Time.deltaTime;
+
     }
 
     public void NoThrust()
@@ -60,7 +64,9 @@ public class ShipParent : MovingObject
 
     public void RotateShip(float value)
     {
-
+        float currentDegrees = GetRotationinDegrees();
+        currentDegrees += value * Time.deltaTime;
+        SetRotationinDegrees(currentDegrees);
     }
 
     public void FireMissle(DrawableGrid grid, int sceneIndex)

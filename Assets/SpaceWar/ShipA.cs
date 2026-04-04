@@ -36,4 +36,5 @@ public class ShipA : DrawableObject
         AddLineToObject(new Vector3(9, 3, 0), new Vector3(6, 9, 0), Color.red);
 
     }
+     
 }

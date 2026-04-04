@@ -78,6 +78,11 @@ public class SpaceWarGrid : DrawableGrid
 
     }
 
+    public void RemoveObject(DrawableObject removeObject)
+    {
+        RemoveList.Add(removeObject, sceneIndex);
+    }
+
     public override void ProcessInput(Keyboard kb, Mouse mouse)
     {
         P1_Thrust = kb.wKey.isPressed;
@@ -98,7 +103,7 @@ public class SpaceWarGrid : DrawableGrid
     public override void Tick()
     {
         // Remove Me!
-        TestStuff();
+        //TestStuff();
 
         HandleInput(); 
 

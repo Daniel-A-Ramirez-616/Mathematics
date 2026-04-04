@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MovingObject : DrawableObject
 {
@@ -23,9 +24,18 @@ public class MovingObject : DrawableObject
 
     public void UpdatePostion()
     {
+
         if (Velocity.magnitude > MaxVelocity)
         {
+            Velocity =  Velocity.normalized * MaxVelocity;
+        }
 
+        Position += Velocity * Time.deltaTime;
+
+        if (willScreenWarp && (Position.magnitude > SpaceWarGrid.self.MagicCircleRadius))
+        {
+            Position *= -1;
+            
         }
     }
 
@@ -48,6 +58,11 @@ public class MovingObject : DrawableObject
 
     public bool CheckForCollisionWith(MovingObject other)
     {
-        return false; 
+
+        Vector3 distanceVector  = other.Position - this.Position;
+
+        float combinedRadii = other.CollisionRadius + this.CollisionRadius;
+
+        return (distanceVector.magnitude < combinedRadii);
     }
 }
