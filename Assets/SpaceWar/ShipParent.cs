@@ -6,8 +6,10 @@ public class ShipParent : MovingObject
 {
     public DrawableObject ship;
     public DrawableObject thrust;
+
     public float ShipMaxVelocity = 25f;
     public float ShipThrust = 10f;
+
 
     public void SetupA(DrawableGrid grid, int sceneIndex)
     {
@@ -42,8 +44,8 @@ public class ShipParent : MovingObject
         ship.Position = this.Position;
         thrust.Position = this.Position;
 
-        ship.Roation = this.Roation;
-        thrust.Roation = this.Roation;
+        ship.Rotation = this.Rotation;
+        thrust.Rotation = this.Rotation;
 
         ship.Scale = this.Scale;
         thrust.Scale = this.Scale;
@@ -72,10 +74,32 @@ public class ShipParent : MovingObject
     public void FireMissle(DrawableGrid grid, int sceneIndex)
     {
 
+        Missle missle = new Missle();
+        
+        missle.Position = CircleRadiusPoint(Position, GetRotationinDegrees(), 15);
+        //missle.SetRotationinDegrees(GetRotationinDegrees());
+        missle.CreateCollision(2, grid, sceneIndex);
+        missle.willDrawCollision = true;
+        missle.LaunchMissle(GetRotationinDegrees());
+        SpaceWarGrid.self.AddObjectToScene(sceneIndex, missle);
+        SpaceWarGrid.self.MovingObjectlist.Add(missle);
+
+        //attempted to use factory method getting errors
+        //missle.MakeMissle(Roation, Position, grid, sceneIndex);
     }
 
     public void FireLaser(DrawableGrid grid, int sceneIndex)
     {
 
+    }
+    public Vector3 CircleRadiusPoint(Vector3 origin, float angle, float radius)
+    {
+        Vector3 result = Vector3.zero;
+        result.x = Mathf.Cos(angle * Mathf.Deg2Rad) * radius;
+        result.y = Mathf.Sin(angle * Mathf.Deg2Rad) * radius;
+
+        result += origin;
+
+        return result;
     }
 }

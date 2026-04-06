@@ -29,7 +29,7 @@ public class FacingBox : DrawableObject
             // This works because they're in Screen Space 
             //Vector3 screenPosition = DrawableGrid.Instance.origin;
             Vector3 screenPosition = DrawableGrid.Instance.GridToScreen(Position);
-            Roation = V3ToAngle(screenPosition, DrawableGrid.Instance.MousePosition);
+            Rotation = V3ToAngle(screenPosition, DrawableGrid.Instance.MousePosition);
         }
     }
 

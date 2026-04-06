@@ -2,7 +2,9 @@ using UnityEngine;
 
 public class Missle : MovingObject
 {
-    public float MoveSpeed = 50f; 
+    public float MoveSpeed = 50f;
+    public float Timer = 5;
+    float TimerReset = 0;
 
     public override void Initalize()
     {
@@ -13,11 +15,24 @@ public class Missle : MovingObject
         AddLineToObject(new Vector3(-1, 0, 0), new Vector3(-2, -2, 0), Color.yellow);
         AddLineToObject(new Vector3(-2, -2, 0), new Vector3(2, 0, 0), Color.yellow);
 
+        TimerReset = Timer;
     }
 
     public override void Tick()
     {
           base.Tick();
+
+        Timer -= Time.deltaTime;
+
+        if(Timer <= 0)
+        {
+            SpaceWarGrid.self.RemoveObject(this);
+            if (CollisionCircle != null)
+            {
+                SpaceWarGrid.self.RemoveObject(CollisionCircle);
+            }
+            Timer = TimerReset;
+        }
 
         if (CheckForCollisionWith(SpaceWarGrid.self.ShipAObject))
         {
@@ -43,14 +58,14 @@ public class Missle : MovingObject
         }
     }
 
-    public void MakeMissle(float angle, Vector3 SpawnPosition, Grid grid, int sceneIndex)
+    public void MakeMissle(float angle, Vector3 SpawnPosition, DrawableGrid grid, int sceneIndex)
     {
         Missle missle = new Missle();
-        missle.Position = new Vector3(0, 15, 0);
-        //missleObject.SetRotationinDegrees(75);
-        missle.CreateCollision(2, SpaceWarGrid.self, sceneIndex); 
+        missle.Position = SpawnPosition;
+        //missle.SetRotationinDegrees(angle);
+        missle.CreateCollision(2, grid, sceneIndex); 
         missle.willDrawCollision = true;
-        missle.LaunchMissle(25);
+        missle.LaunchMissle(angle);
         SpaceWarGrid.self.AddObjectToScene(sceneIndex, missle);
         SpaceWarGrid.self.MovingObjectlist.Add(missle);
     }

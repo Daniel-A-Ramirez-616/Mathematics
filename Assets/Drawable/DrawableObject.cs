@@ -12,7 +12,7 @@ public class DrawableObject
 
     // Transform information 
     public Vector3 Position = Vector3.zero;
-    public float Roation = 0;
+    public float Rotation = 0;
     public Vector3 Scale = Vector3.one;
 
     public List<Line> LineList;
@@ -75,8 +75,8 @@ public class DrawableObject
         translatedLine.end.z *= Scale.z;
 
         // Rotate
-        translatedLine.start = RotatePoint(Vector3.zero, translatedLine.start, Roation);
-        translatedLine.end = RotatePoint(Vector3.zero, translatedLine.end, Roation);
+        translatedLine.start = RotatePoint(Vector3.zero, translatedLine.start, Rotation);
+        translatedLine.end = RotatePoint(Vector3.zero, translatedLine.end, Rotation);
 
 
         // Position
@@ -125,11 +125,11 @@ public class DrawableObject
 
     public float GetRotationinDegrees()
     {
-        return (Roation * Mathf.Rad2Deg);
+        return (Rotation * Mathf.Rad2Deg);
     }
 
     public void SetRotationinDegrees(float degrees)
     {
-        Roation = (degrees * Mathf.Deg2Rad);
+        Rotation = (degrees * Mathf.Deg2Rad);
     }
 }

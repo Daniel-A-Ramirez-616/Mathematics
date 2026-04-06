@@ -127,8 +127,8 @@ public class SpaceWarGrid : DrawableGrid
 
     public void TestStuff()
     {
-        ShipAObject.Roation += (30 * Time.deltaTime * Mathf.Deg2Rad);
-        ShipBObject.Roation += (-30 * Time.deltaTime * Mathf.Deg2Rad);
+        ShipAObject.Rotation += (30 * Time.deltaTime * Mathf.Deg2Rad);
+        ShipBObject.Rotation += (-30 * Time.deltaTime * Mathf.Deg2Rad);
     }
 
     public void StartGame()

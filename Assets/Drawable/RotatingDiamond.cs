@@ -6,6 +6,6 @@ public class RotatingDiamond : DrawableDiamond
 
     public override void Tick()
     {
-        Roation += (RotationRate * Mathf.Deg2Rad * Time.deltaTime);
+        Rotation += (RotationRate * Mathf.Deg2Rad * Time.deltaTime);
     }
 }

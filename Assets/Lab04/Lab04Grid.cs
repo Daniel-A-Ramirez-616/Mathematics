@@ -31,7 +31,7 @@ public class Lab04Grid : DrawableGrid
         sceneIndex = AddScene("Diamond at Scale of 20,10, Rotation of 45 deg. ");
         newGraph = new DrawableDiamond();
         newGraph.Scale = new Vector3(20, 10, 1);
-        newGraph.Roation = (45 * Mathf.Deg2Rad);
+        newGraph.Rotation = (45 * Mathf.Deg2Rad);
         AddObjectToScene(sceneIndex, newGraph);
 
         sceneIndex = AddScene("Rotating Diamond  at Scale of 20,10");
