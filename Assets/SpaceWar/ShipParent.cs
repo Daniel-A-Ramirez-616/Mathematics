@@ -77,7 +77,6 @@ public class ShipParent : MovingObject
         Missle missle = new Missle();
         
         missle.Position = CircleRadiusPoint(Position, GetRotationinDegrees(), 15);
-        //missle.SetRotationinDegrees(GetRotationinDegrees());
         missle.CreateCollision(2, grid, sceneIndex);
         missle.willDrawCollision = true;
         missle.LaunchMissle(GetRotationinDegrees());
