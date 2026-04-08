@@ -14,7 +14,8 @@ public class DrawableObject
     public Vector3 Position = Vector3.zero;
     public float Rotation = 0;
     public Vector3 Scale = Vector3.one;
-
+    public float CollisionRadius = 10;
+    public DrawableObject CollisionCircle;
     public List<Line> LineList;
 
     public DrawableObject()
@@ -132,4 +133,5 @@ public class DrawableObject
     {
         Rotation = (degrees * Mathf.Deg2Rad);
     }
+
 }

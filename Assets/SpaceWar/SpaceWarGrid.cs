@@ -1,10 +1,11 @@
-using System.Collections.Generic; 
+using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
-using UnityEngine.InputSystem; 
+using UnityEngine.InputSystem;
 
 public class SpaceWarGrid : DrawableGrid
 {
-    public static SpaceWarGrid self; 
+    public static SpaceWarGrid self;
 
 
     public bool isPlayingGame = false;
@@ -16,10 +17,12 @@ public class SpaceWarGrid : DrawableGrid
     public ShipParent ShipBObject;
 
     public DrawableObject DebugMagicCircle;
-    public float MagicCircleRadius = 150; 
+    public DrawableObject PlanetGallifrey;
+    public float MagicCircleRadius = 150;
 
     public List<MovingObject> MovingObjectlist = new List<MovingObject>();
 
+    public bool isApplyingGravity = true;
 
     // Game Score, This is Player Deaths
     public int PlayerAScore = 0;
@@ -27,16 +30,18 @@ public class SpaceWarGrid : DrawableGrid
 
 
     // Player Inputs
-    bool P1_Thrust = false; 
+    bool P1_Thrust = false;
     bool P2_Thrust = false;
     bool P1_CWRotation = false;
     bool P2_CWRotation = false;
     bool P1_CCWRotation = false;
     bool P2_CCWRotation = false;
-    bool P1_FireMissle = false;    
+    bool P1_FireMissle = false;
     bool P2_FireMissle = false;
     bool P1_FireLaser = false;
     bool P2_FireLaser = false;
+
+    bool F3Key = false;
 
     public void Awake()
     {
@@ -46,9 +51,9 @@ public class SpaceWarGrid : DrawableGrid
     public override void SetupScenes()
     {
         sceneIndex = AddScene("Lab 07: SpaceWar");
-        
+
         missleObject = new Missle();
-        missleObject.Position = new Vector3(0, 15, 0);
+        missleObject.Position = new Vector3(0, 100, 0);
         //missleObject.SetRotationinDegrees(75);
         missleObject.CreateCollision(2, this, sceneIndex);
         missleObject.willDrawCollision = true;
@@ -57,8 +62,8 @@ public class SpaceWarGrid : DrawableGrid
         MovingObjectlist.Add(missleObject);
 
         ShipAObject = new ShipParent();
-        ShipAObject.SetupA(this, sceneIndex); 
-        ShipAObject.Position = new Vector3(100, 0, 0);
+        ShipAObject.SetupA(this, sceneIndex);
+        ShipAObject.Position = new Vector3(100, -100, 0);
         ShipAObject.SetRotationinDegrees(180);
         ShipAObject.CreateCollision(10, this, sceneIndex);
         ShipAObject.willDrawCollision = true;
@@ -67,14 +72,17 @@ public class SpaceWarGrid : DrawableGrid
 
         ShipBObject = new ShipParent();
         ShipBObject.SetupB(this, sceneIndex);
-        ShipBObject.Position = new Vector3(-15, 0, 0);
+        ShipBObject.Position = new Vector3(-100, 0, 0);
         ShipBObject.CreateCollision(10, this, sceneIndex);
-        ShipBObject.willDrawCollision = true; 
+        ShipBObject.willDrawCollision = true;
         AddObjectToScene(sceneIndex, ShipBObject);
         MovingObjectlist.Add(ShipBObject);
 
         DebugMagicCircle = DrawingTools.CreateCircleObject(Vector3.zero, MagicCircleRadius, 360, Color.gray);
         AddObjectToScene(sceneIndex, DebugMagicCircle);
+
+        PlanetGallifrey = DrawingTools.CreateCircleObject(Vector3.zero, 20, 36, Color.red);
+        AddObjectToScene(sceneIndex, PlanetGallifrey);
 
     }
 
@@ -96,6 +104,8 @@ public class SpaceWarGrid : DrawableGrid
         P2_CCWRotation = kb.jKey.isPressed;
         P2_FireMissle = kb.uKey.wasPressedThisFrame;
         P2_FireLaser = kb.oKey.wasPressedThisFrame;
+
+        F3Key = kb.f3Key.wasPressedThisFrame;
     }
 
 
@@ -105,10 +115,27 @@ public class SpaceWarGrid : DrawableGrid
         // Remove Me!
         //TestStuff();
 
-        HandleInput(); 
 
+        HandleInput();
+        ApplyGravity();
 
-    } 
+    }
+
+    public float ForceofGravity = 2.5f;
+    public void ApplyGravity()
+    {
+        if (!isApplyingGravity) { return; }
+
+        Vector3 DirectionVector = Vector3.zero;
+
+        foreach (MovingObject item in MovingObjectlist)
+        {
+            DirectionVector = -item.Position.normalized;
+
+            item.Velocity += DirectionVector * ForceofGravity * Time.deltaTime;
+        }
+
+    }
 
     public void HandleInput()
     {
@@ -123,6 +150,8 @@ public class SpaceWarGrid : DrawableGrid
         if (P2_CCWRotation) { ShipBObject.RotateShip(-45); }
         if (P2_FireMissle) { ShipBObject.FireMissle(this, sceneIndex); }
         if (P2_FireLaser) { ShipBObject.FireLaser(this, sceneIndex); }
+
+        if (F3Key) { isApplyingGravity = !isApplyingGravity; }
     }
 
     public void TestStuff()
@@ -134,7 +163,7 @@ public class SpaceWarGrid : DrawableGrid
     public void StartGame()
     {
         isPlayingGame = true;
-        isTickingScenes = true; 
+        isTickingScenes = true;
     }
 
     public void GameOver()
