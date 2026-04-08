@@ -233,11 +233,11 @@ MonoBehaviour:
   lineColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   divisionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   isDrawingObjects: 1
-  isDrawingTheGrid: 1
-  isDrawingOrigin: 1
-  isDrawingAxis: 1
-  isDrawingAxisOnly: 1
-  isDrawingDivisions: 1
+  isDrawingTheGrid: 0
+  isDrawingOrigin: 0
+  isDrawingAxis: 0
+  isDrawingAxisOnly: 0
+  isDrawingDivisions: 0
   isTickAllScenes: 0
   isTickingScenes: 1
   isTickingGrid: 1
@@ -248,11 +248,20 @@ MonoBehaviour:
   DebugMagicCircle:
     PerformDraw: 1
     Position: {x: 0, y: 0, z: 0}
-    Roation: 0
+    Rotation: 0
     Scale: {x: 1, y: 1, z: 1}
+    CollisionRadius: 10
+  PlanetGallifrey:
+    PerformDraw: 1
+    Position: {x: 0, y: 0, z: 0}
+    Rotation: 0
+    Scale: {x: 1, y: 1, z: 1}
+    CollisionRadius: 10
   MagicCircleRadius: 200
+  isApplyingGravity: 0
   PlayerAScore: 0
   PlayerBScore: 0
+  ForceofGravity: 2.5
 --- !u!1 &796140856
 GameObject:
   m_ObjectHideFlags: 0
