@@ -1,0 +1,25 @@
+using TMPro;
+using UnityEngine;
+
+public class ShowLab9Results : MonoBehaviour
+{
+    public LAb09Grid grid;
+
+    public TextMeshProUGUI WhiteTextField;
+    public TextMeshProUGUI BlackTextField;
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        string result = "";
+        result += grid.CircleCollisionResult + ": Circle" + "\n";
+        result += grid.RectangleCollisionResult + ": Rectangle" + "\n";
+        result += grid.TriangleCollisionResult + ": Triangle" + "\n";
+        result += grid.LineCircleIntersection + ": Line-Circle\n"; 
+
+
+        WhiteTextField.text = result;
+        BlackTextField.text = result;
+    }
+}
