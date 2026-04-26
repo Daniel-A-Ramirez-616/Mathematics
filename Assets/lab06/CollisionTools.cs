@@ -104,7 +104,7 @@ public static class CollisionTools
         Intersect2.PerformDraw = true;
 
         Intersect1.Position = points[0];
-        Intersect1.Position = points[1];
+        Intersect2.Position = points[1];
 
         return true;
     }

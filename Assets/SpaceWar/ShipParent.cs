@@ -6,10 +6,10 @@ public class ShipParent : MovingObject
 {
     public DrawableObject ship;
     public DrawableObject thrust;
-
+    Line LaserObject;
     public float ShipMaxVelocity = 25f;
     public float ShipThrust = 10f;
-
+    
 
     public void SetupA(DrawableGrid grid, int sceneIndex)
     {
