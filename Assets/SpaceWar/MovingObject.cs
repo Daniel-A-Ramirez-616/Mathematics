@@ -54,6 +54,7 @@ public class MovingObject : DrawableObject
         CollisionRadius = Radius;
         CollisionCircle = DrawingTools.CreateCircleObject(Vector3.zero, Radius, 36, Color.magenta);
         grid.AddObjectToScene(sceneIndex, CollisionCircle);
+        CollisionCircle.PerformDraw = true;
     }
 
     public bool CheckForCollisionWith(MovingObject other)

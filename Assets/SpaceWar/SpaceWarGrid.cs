@@ -121,6 +121,35 @@ public class SpaceWarGrid : DrawableGrid
 
     }
 
+    public override void CleanUpScenes()
+    {
+        if (RemoveList.Count == 0)
+        {
+            return;
+        }
+        foreach (var item in RemoveList)
+        {
+            SceneList[item.Value].Remove(item.Key);
+            //DrawableObject thing = item.Key;
+            //MovingObject mo = (MovingObject)item.Key;
+
+            if(item.Key is MovingObject)
+            {
+                MovingObjectlist.Remove((MovingObject)item.Key);
+            }
+
+            /*
+            MovingObject mo = (MovingObject)item.Key;
+            if (mo != null)
+            {
+                MovingObjectlist.Remove((MovingObject)item.Key);
+            }
+            */
+        }
+
+        RemoveList.Clear();
+    }
+
     public float ForceofGravity = 2.5f;
     public void ApplyGravity()
     {
@@ -137,6 +166,17 @@ public class SpaceWarGrid : DrawableGrid
 
     }
 
+    public void RecordKill(bool who)
+    {
+        if (who)
+        {
+            PlayerAScore++;
+        }
+        else
+        {
+            PlayerBScore++;
+        }
+    }
     public void HandleInput()
     {
         if (P1_Thrust) { ShipAObject.AddThrust(); } else { ShipAObject.NoThrust(); }
